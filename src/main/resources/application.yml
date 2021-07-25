@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: mongo-learn
+  data:
+    mongodb:
+      host: 192.168.168.170
+      port: 27017
+      database: app_db
+      username: lizhengpeng
+      password: '123456'

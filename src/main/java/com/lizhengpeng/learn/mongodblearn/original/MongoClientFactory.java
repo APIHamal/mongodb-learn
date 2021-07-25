@@ -1,10 +1,8 @@
 package com.lizhengpeng.learn.mongodblearn.original;
 
-import com.mongodb.Block;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import com.mongodb.client.*;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
@@ -96,6 +94,11 @@ public class MongoClientFactory {
              */
             socketBuilder.readTimeout(10,TimeUnit.SECONDS);
         });
+        /**
+         * 设置当前客户端的读偏好
+         * 有线读取跟随者节点数据
+         */
+        builder.readPreference(ReadPreference.secondary());
         /**
          * 构建出MongoClient对象
          */
