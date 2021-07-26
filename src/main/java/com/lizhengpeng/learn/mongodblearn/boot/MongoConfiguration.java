@@ -6,6 +6,7 @@ import com.mongodb.ReadPreference;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,11 +18,11 @@ import java.util.concurrent.TimeUnit;
  * 增加mongodb配置对象
  * @author idealist
  */
-//@Configuration
+@Configuration
 public class MongoConfiguration {
 
     @Bean
-    public MongoClient mongoClient(){
+    public MongoClient mongoClient(MongoProperties mongoProperties){
         /**
          * mongodb构造器对象
          */
@@ -32,8 +33,10 @@ public class MongoConfiguration {
          * 因此通常只需要部分服务器的地址信息即可
          */
         List<ServerAddress> serverAddressList = new ArrayList<>();
-        serverAddressList.add(new ServerAddress("192.168.168.168",27017));
-        serverAddressList.add(new ServerAddress("192.168.168.169",27017));
+        String[] hostArray = mongoProperties.getHost().split(",");
+        for(String host : hostArray){
+            serverAddressList.add(new ServerAddress(host,mongoProperties.getPort()));
+        }
         /**
          * 配置mongodb服务器地址对象
          */
@@ -44,7 +47,7 @@ public class MongoConfiguration {
          * 2、代表认证的数据库对象
          * 3、代表当前认证用户的密码
          */
-        MongoCredential credential = MongoCredential.createCredential("lizhengpeng","app_db","123456".toCharArray());
+        MongoCredential credential = MongoCredential.createCredential(mongoProperties.getUsername(),mongoProperties.getDatabase(),mongoProperties.getPassword());
         builder.credential(credential);
         /**
          * 数据库连接池相关参数的设置
